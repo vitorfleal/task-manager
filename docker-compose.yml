@@ -1,0 +1,76 @@
+version: '1.0'
+
+services:
+      
+  mssql:
+    container_name: taskmanager-db
+    image: "mcr.microsoft.com/mssql/server"
+    container_name: taskmanager-mssql
+    environment:
+      SA_PASSWORD: "Develop@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 1433:1433
+          
+  migrations:
+    container_name: taskmanager-migrations
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    volumes:
+      - .:/app
+    depends_on:
+      - mssql
+    command:
+      [
+        "/app/scripts/apply-migrations.sh"
+      ]
+
+  integration-tests:
+    container_name: taskmanager-integration-tests
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    volumes:
+      - .:/app
+    depends_on:
+      - mssql
+      - migrations
+    env_file:
+      - .env
+    command:
+      [
+        "/app/scripts/wait-for-it.sh",
+        "mssql:1433",
+        "-t",
+        "30",
+        "--",
+        "/app/scripts/start-tests.sh"
+      ]
+      
+  api:
+    container_name: taskmanager-api
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    volumes:
+      - .:/app
+      - ${USERPROFILE}\.aspnet\https:/https/
+    env_file:
+      - .env
+    depends_on:
+      - mssql
+    command:
+      [
+        "/app/scripts/wait-for-it.sh",
+        "mssql:1433",
+        "-t",
+        "120",
+        "--",
+        "/app/scripts/start-development.sh"
+      ]
+    ports:
+      - 5000:5000
+      - 5001:5001
