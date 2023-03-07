@@ -10,7 +10,7 @@ builder.Configuration
     .AddJsonFile($"appsettings.{builder.Environment.EnvironmentName}.json", true, true)
     .AddEnvironmentVariables();
 
-var builtConfig = builder.Configuration.AddEnvironmentVariables().Build();
+// var builtConfig = builder.Configuration.AddEnvironmentVariables().Build();
 
 // builder.WebHost.AddSentry(builtConfig);
 
@@ -44,7 +44,7 @@ app.UseCors(c =>
     c.AllowAnyOrigin();
 });
 
-app.UseSentryTracing();
+// app.UseSentryTracing();
 
 app.UseHttpsRedirection();
 

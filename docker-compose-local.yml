@@ -11,8 +11,7 @@ services:
       ACCEPT_EULA: "Y"
     ports:
       - 1433:1433
-      
-      
+          
   migrations:
     container_name: taskmanager-migrations
     env_file:
@@ -20,19 +19,22 @@ services:
     build:
       context: .
       dockerfile: Dockerfile.local
+    volumes:
+      - .:/app
     depends_on:
       - mssql
     command:
       [
-        "./scripts/apply-migrations.sh"
+        "/app/scripts/apply-migrations.sh"
       ]
-      
-      
+
   integration-tests:
     container_name: taskmanager-integration-tests
     build:
       context: .
       dockerfile: Dockerfile.local
+    volumes:
+      - .:/app
     depends_on:
       - mssql
       - migrations
@@ -40,35 +42,34 @@ services:
       - .env
     command:
       [
-        "./scripts/wait-for-it.sh",
+        "/app/scripts/wait-for-it.sh",
         "mssql:1433",
         "-t",
         "30",
         "--",
-        "./scripts/start-tests.sh"
+        "/app/scripts/start-tests.sh"
       ]
       
-      
-  taskmanager-api:
+  api:
     container_name: taskmanager-api
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.local
     volumes:
+      - .:/app
       - ${USERPROFILE}\.aspnet\https:/https/
     env_file:
       - .env
     depends_on:
       - mssql
-      - migrations
-    entrypoint: ["dotnet", "TaskManager.Api.dll"]
     command:
       [
-        "./scripts/wait-for-it.sh",
+        "/app/scripts/wait-for-it.sh",
         "mssql:1433",
         "-t",
         "120",
         "--",
+        "/app/scripts/start-development.sh"
       ]
     ports:
       - 5000:5000
