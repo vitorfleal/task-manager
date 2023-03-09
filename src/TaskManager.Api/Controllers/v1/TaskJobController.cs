@@ -41,7 +41,7 @@ public class TaskJobController : ControllerBase
     }
 
     /// <summary>
-    /// Realiza a atualização dos de uma tarefa
+    /// Realiza a atualização dos de uma tarefa específica
     /// </summary>
     /// <response code="204">Retorno padrão sem dados</response>
     /// <response code="422">Retorno padrão informando erros que aconteceram</response>
