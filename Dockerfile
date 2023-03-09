@@ -2,7 +2,11 @@ ARG IMAGE_TAG=6.0
 
 # Build runtime image
 FROM mcr.microsoft.com/dotnet/aspnet:$IMAGE_TAG AS base
-EXPOSE 3000
+EXPOSE 80
+EXPOSE 443
+
+ENV ASPNETCORE_ENVIRONMENT=Development
+ENV ASPNETCORE_URLS=http://+
 
 FROM mcr.microsoft.com/dotnet/sdk:$IMAGE_TAG AS build
 WORKDIR /app
