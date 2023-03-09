@@ -61,6 +61,8 @@ services:
       - ASPNETCORE_URLS=https://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Password=localhost
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/taskmanagerapp.pfx
+      - WEBSITES_PORT=80
+      — WEBSITES_CONTAINER_START_TIME_LIMIT=1500
     depends_on:
       - mssql
       - migrations
