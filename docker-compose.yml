@@ -58,7 +58,7 @@ services:
       - ${USERPROFILE}\.aspnet\https:/https/
     env_file:
       - ASPNETCORE_ENVIRONMENT: Development
-      - ASPNETCORE_URLS: https://+:80;http://+:81
+      - ASPNETCORE_URLS: https://+:80
       - ASPNETCORE_Kestrel__Certificates__Default__Password: localhost
       - ASPNETCORE_Kestrel__Certificates__Default__Path: /https/taskmanagerapp.pfx
     depends_on:
@@ -74,5 +74,5 @@ services:
         "--",
       ]
     ports:
-      - 80:80
-      - 81:81
+      - 80
+      - WEBSITED_PORT:80
