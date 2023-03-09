@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/velf-labs/Laboratorio/_apis/build/status/Task%20Manager?branchName=main)](https://dev.azure.com/velf-labs/Laboratorio/_build/latest?definitionId=4&branchName=main)
+
 # Gerenciador de Tarefas
 
 Este é um exemplo de projeto sobre como implementar uma API para gerenciamento de tarefas.
