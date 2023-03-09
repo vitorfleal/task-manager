@@ -11,8 +11,8 @@ resources:
 variables:
   # Container registry service connection established during pipeline creation
   dockerRegistryServiceConnection: '43337b35-4f17-4d52-90a1-39a02dc3f038'
-  imageRepository: 'taskmanager'
-  containerRegistry: 'taskmanagercontainer.azurecr.io'
+  imageRepository: 'taskmanagerapi'
+  containerRegistry: 'taskmanagerapi.azurecr.io'
   dockerfilePath: '$(Build.SourcesDirectory)/Dockerfile'
   tag: '$(Build.BuildId)'
 
