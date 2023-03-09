@@ -2,6 +2,7 @@ ARG IMAGE_TAG=6.0
 
 FROM mcr.microsoft.com/dotnet/sdk:$IMAGE_TAG AS build-env
 EXPOSE 80
+EXPOSE 443
 
 WORKDIR /app
 COPY . .
@@ -16,3 +17,4 @@ RUN dotnet publish -c Release -o /app --no-restore
 FROM mcr.microsoft.com/dotnet/aspnet:$IMAGE_TAG
 WORKDIR /app
 COPY --from=build-env /app .
+ENTRYPOINT ["dotnet", "TaskManager.Api.dll"]
