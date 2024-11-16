@@ -1,0 +1,61 @@
+version: '3.8'
+
+services:
+      
+  mssql:
+    container_name: taskmanager-db
+    image: "mcr.microsoft.com/mssql/server"
+    environment:
+      SA_PASSWORD: "Develop@123"
+      ACCEPT_EULA: "Y"
+    ports:
+      - 5434:1433
+      
+      
+  migrations:
+    container_name: taskmanager-migrations
+    env_file:
+      - .env
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    depends_on:
+      - mssql
+    command:
+      - sh
+      - -c
+      - dotnet ef database update --project src/TaskManager.Infrastructure --startup-project src/TaskManager.Api --context TaskManagerContext
+      
+      
+  integration-tests:
+    container_name: taskmanager-integration-tests
+    build:
+      context: .
+      dockerfile: Dockerfile.local
+    depends_on:
+      - mssql
+      - migrations
+    env_file:
+      - .env
+    command:
+      - sh
+      - -c
+      - dotnet test tests/TaskManager.Tests/ --configuration Release --logger trx --logger "console;verbosity=normal"
+      
+      
+  api:
+    container_name: taskmanager-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ${USERPROFILE}\.aspnet\https:/https/
+    env_file:
+      - .env
+    depends_on:
+      - mssql
+      - migrations
+    entrypoint: ["dotnet", "TaskManager.Api.dll"]
+    ports:
+      - 5000:5000
+      - 5001:5001
